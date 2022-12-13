@@ -24,18 +24,22 @@ Examples:
 // Record type (AND)
 type Customer = {
     Name:string
-    Email:string option
+    Email:Option<string> // or option
     IsEligible:bool
     IsRegistered:bool
 }
 
-let calculateOrderTotal customer spend =
+// type Option<'T> =
+//     | Some of 'T
+//     | None
+
+let calculateOrderTotal (customer: Customer) (spend: decimal) =
     let discount = 
         if customer.IsRegistered && customer.IsEligible && spend >= 100M then spend * 0.1M
         else 0M
     spend - discount
 
-let john = { Name = "John"; Email = Some "john@test.org"; IsEligible = true; IsRegistered = true }
+let john: Customer = { Name = "John"; Email = Some "john@test.org"; IsEligible = true; IsRegistered = true }
 let mary = { john with Name = "Mary"; Email = Some "mary@test.org" }
 let richard = { john with Name = "Richard"; Email = None; IsEligible = false }
 let sarah = { richard with Name = "Sarah"; IsRegistered = false }
@@ -45,6 +49,4 @@ let assertMary = calculateOrderTotal mary 99.0M = 99.0M
 let assertRichard = calculateOrderTotal richard 100.0M = 100.0M
 let assertSarah = calculateOrderTotal sarah 100.0M = 100.0M
 
-// type Option<'T> =
-//     | Some of 'T
-//     | None
+// How well does our design match our requirements?
